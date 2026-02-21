@@ -124,10 +124,6 @@ export default function PurrintApp() {
 
   return (
     <div className="flex w-full max-w-xl flex-col items-center gap-4 p-4 pt-2 pb-16">
-      <h1 className="font-hand text-6xl text-black pb-2">
-        purrint
-      </h1>
-
       {!isBluetoothAvailable && (
         <div className="w-full max-w-[404px] rounded-lg bg-amber-50 p-4 text-center text-sm font-medium text-amber-900/80 mb-2">
           Use Chrome on Android or Desktop to print.
@@ -224,11 +220,11 @@ export default function PurrintApp() {
       <button
         id="print-button"
         type="button"
-        className="font-hand text-5xl text-white bg-black px-8 py-2 -mt-6 z-10 -rotate-2 hover:rotate-0 transition-transform disabled:bg-black disabled:opacity-50 disabled:cursor-not-allowed shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)]"
+        className="font-hand text-5xl text-white bg-black px-8 py-2 -mt-6 z-10 -rotate-2 hover:rotate-0 transition-transform disabled:bg-black disabled:line-through disabled:cursor-not-allowed shadow-[0_10px_20px_rgba(0,0,0,0.19),0_6px_6px_rgba(0,0,0,0.23)]"
         onClick={onPrintClick}
         disabled={!isBluetoothAvailable}
       >
-        print
+        purrint!
       </button>
 
       <input
