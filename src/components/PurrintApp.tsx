@@ -124,6 +124,10 @@ export default function PurrintApp() {
 
   return (
     <div className="flex w-full max-w-xl flex-col items-center gap-4 p-4 pt-2 pb-16">
+      <h1 className="font-sans text-5xl font-bold tracking-tighter text-zinc-900 mb-2">
+        PURRINT
+      </h1>
+
       {!isBluetoothAvailable && (
         <div className="w-full max-w-[404px] rounded-lg bg-amber-50 p-4 text-center text-sm font-medium text-amber-900/80 mb-2">
           Use Chrome on Android or Desktop to print.

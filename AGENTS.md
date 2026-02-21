@@ -1,7 +1,7 @@
 # AGENTS Guide
 
 ## Purpose
-- PURRINT is a Bun + Vite + React single-page app that prepares 384 px‑wide black-and-white bitmaps for tiny Bluetooth thermal printers (tested with MX06) and sends them over Web Bluetooth.
+- PURRINT is a Deno + Vite + React single-page app that prepares 384 px‑wide black-and-white bitmaps for tiny Bluetooth thermal printers (tested with MX06) and sends them over Web Bluetooth.
 - The UI lets the user either upload/drop/paste an image or type multiline text that gets rasterized into receipt-friendly imagery, preview it on a faux receipt, and trigger printing when a Web Bluetooth stack is available (desktop Chrome or Android Chrome).
 
 ## High-Level Structure
@@ -40,12 +40,12 @@
 
 ## Tooling & Tasks
 - `package.json` declares React 19, `canvas-txt`, the React DOM types, Typescript 5.8, Vite 7, and `vite-plugin-pwa`.
-- `mise.toml` pins Bun (latest) as both runtime and package manager. Tasks include:
+- `mise.toml` pins Deno (latest) as both runtime and package manager. Tasks include:
   - `mise run dev` → Vite development server (hot reload, do not run inside this environment).  
-  - `mise run build` → builds for production bundles.  
+  - `mise run build` → type checks with tsc and builds for production bundles.
   - `mise run preview` → serves the Vite build output.  
-  - A `postinstall` hook runs `bun install` to sync dependencies after tool downloads.
-- `bun.lock` tracks the dependency graph.
+  - A `postinstall` hook runs `deno install` to sync dependencies after tool downloads.
+- `deno.lock` tracks the dependency graph.
 
 ## Key Technical Constraints
 - Canvas width and printer width are locked at 384 pixels; every processing step assumes that dimension. Changing printers means touching `WIDTH`, `PRINTER_WIDTH`, and dithering thresholds.
