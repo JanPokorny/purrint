@@ -123,7 +123,7 @@ export default function PurrintApp() {
   const modeToggleButtonInactive = "border-transparent text-black hover:bg-zinc-100";
 
   return (
-    <div className="flex w-full max-w-xl flex-col items-center gap-4 p-8 pb-16">
+    <div className="flex w-full max-w-xl flex-col items-center gap-4 p-4 pt-2 pb-16">
       <h1 className="font-hand text-6xl text-black pb-2">
         purrint
       </h1>
@@ -224,7 +224,7 @@ export default function PurrintApp() {
       <button
         id="print-button"
         type="button"
-        className="font-hand text-4xl text-white bg-black px-6 py-1 -mt-8 z-10 -rotate-2 hover:rotate-0 transition-transform disabled:bg-neutral-600 disabled:cursor-not-allowed shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)]"
+        className="font-hand text-5xl text-white bg-black px-8 py-2 -mt-6 z-10 -rotate-2 hover:rotate-0 transition-transform disabled:bg-neutral-600 disabled:cursor-not-allowed shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)]"
         onClick={onPrintClick}
         disabled={!isBluetoothAvailable}
       >
