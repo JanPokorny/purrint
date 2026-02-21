@@ -117,23 +117,23 @@ export default function PurrintApp() {
 
 
   const modeToggleButtonBase =
-    "flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500";
-  const modeToggleButtonActive = "bg-white text-zinc-900 shadow-sm";
-  const modeToggleButtonInactive = "text-zinc-500 hover:text-zinc-900";
+    "px-2 pb-1 text-sm font-medium transition-colors focus-visible:outline-none border-b-2";
+  const modeToggleButtonActive = "border-black text-zinc-900";
+  const modeToggleButtonInactive = "border-transparent text-zinc-400 hover:text-zinc-600";
 
   return (
-    <div className="flex w-full max-w-xl flex-col gap-8 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm">
-      <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900">
+    <div className="flex w-full max-w-xl flex-col items-center gap-10 p-4">
+      <h1 className="text-5xl font-bold tracking-tighter text-zinc-900">
         PURRINT
       </h1>
 
       {!isBluetoothAvailable && (
-        <div className="rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-800">
-          PURRINT works only on Android and desktop Chrome-based browsers.
+        <div className="w-full max-w-[404px] rounded-lg bg-amber-50 p-4 text-center text-sm font-medium text-amber-900/80">
+          Use Chrome on Android or Desktop to print.
         </div>
       )}
 
-      <div className="flex rounded-lg bg-zinc-100 p-1">
+      <div className="flex gap-6">
         <button
           type="button"
           className={`${modeToggleButtonBase} ${
@@ -154,65 +154,62 @@ export default function PurrintApp() {
         </button>
       </div>
 
-      <div className="flex justify-center overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 p-4">
-        <div
-          id="preview-container"
-          style={{ fontFamily: FONT_FAMILY }}
+      <div
+        id="preview-container"
+        style={{ fontFamily: FONT_FAMILY }}
+        className={[
+          "box-content w-[384px] min-h-[180px] bg-white p-[10px] shadow-lg rounded-sm ring-1 ring-black/5",
+          mode === "image"
+            ? "cursor-pointer flex flex-col items-center justify-center"
+            : "cursor-text flex flex-col items-stretch justify-start",
+        ].join(" ")}
+        onClick={
+          mode === "image" ? () => imageInput.current?.click() : undefined
+        }
+        onDrop={mode === "image" ? onDrop : undefined}
+        onDragOver={
+          mode === "image"
+            ? (event) => {
+                event.preventDefault();
+              }
+            : undefined
+        }
+      >
+        {mode === "image" && !photoImageData && (
+          <div
+            id="preview-text"
+            className="pointer-events-none flex h-[180px] w-full flex-col items-center justify-center text-center text-zinc-400"
+          >
+            <span className="font-sans text-sm font-medium text-zinc-900">
+              Select image
+            </span>
+            <span className="mt-1 font-sans text-xs text-zinc-400">
+              or paste / drop here
+            </span>
+          </div>
+        )}
+
+        {mode === "text" && (
+          <textarea
+            ref={textArea}
+            className="min-h-[180px] w-full resize-none bg-transparent p-0 outline-none placeholder:text-zinc-300"
+            placeholder="Type your message here…"
+            value={textInput}
+            onChange={(event) => setTextInput(event.target.value)}
+            style={{ fontFamily: FONT_FAMILY, fontSize: FONT_SIZE }}
+          />
+        )}
+
+        <canvas
+          id="preview"
+          ref={previewCanvas}
           className={[
-            "flex w-[384px] min-h-[180px] bg-white shadow-sm ring-1 ring-black/5",
-            mode === "image"
-              ? "cursor-pointer items-center justify-center"
-              : "cursor-text items-stretch justify-start",
-          ].join(" ")}
-          onClick={
-            mode === "image" ? () => imageInput.current?.click() : undefined
-          }
-          onDrop={mode === "image" ? onDrop : undefined}
-          onDragOver={
-            mode === "image"
-              ? (event) => {
-                  event.preventDefault();
-                }
-              : undefined
-          }
-        >
-          {mode === "image" && !photoImageData && (
-            <div
-              id="preview-text"
-              className="pointer-events-none w-full p-4 text-center text-zinc-400"
-            >
-              <span className="font-sans text-sm font-medium">
-                Click to select image
-              </span>
-              <br />
-              <span className="font-sans text-xs text-zinc-300">
-                (or paste / drop here)
-              </span>
-            </div>
-          )}
-
-          {mode === "text" && (
-            <textarea
-              ref={textArea}
-              className="min-h-[180px] w-full resize-none bg-transparent p-0 outline-none placeholder:text-zinc-300"
-              placeholder="Type your message here…"
-              value={textInput}
-              onChange={(event) => setTextInput(event.target.value)}
-              style={{ fontFamily: FONT_FAMILY, fontSize: FONT_SIZE }}
-            />
-          )}
-
-          <canvas
-            id="preview"
-            ref={previewCanvas}
-            className={[
-              "h-auto w-full pointer-events-none pixelated",
-              photoImageData ? "block" : "hidden",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          ></canvas>
-        </div>
+            "h-auto w-full pointer-events-none pixelated block",
+            photoImageData ? "block" : "hidden",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        ></canvas>
       </div>
 
       <input
@@ -223,10 +220,11 @@ export default function PurrintApp() {
         ref={imageInput}
         onChange={onImageInputChange}
       />
+
       <button
         id="print-button"
         type="button"
-        className="w-full rounded-xl bg-zinc-900 px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-zinc-800 hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400 disabled:shadow-none"
+        className="h-14 w-full max-w-[404px] rounded-full bg-zinc-900 text-lg font-bold text-white transition-transform active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400"
         onClick={onPrintClick}
         disabled={!isBluetoothAvailable}
       >

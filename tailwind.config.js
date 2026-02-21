@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["Space Grotesk", "sans-serif"],
         ibm: ['"IBM VGA 9x16"', '"Courier New"', "Courier", "monospace"],
       },
     },
