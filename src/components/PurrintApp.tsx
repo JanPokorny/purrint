@@ -123,18 +123,18 @@ export default function PurrintApp() {
   const modeToggleButtonInactive = "border-transparent text-black hover:bg-zinc-100";
 
   return (
-    <div className="flex w-full max-w-xl flex-col items-center gap-6 p-8 pb-32">
-      <h1 className="font-hand text-7xl text-black pb-4">
+    <div className="flex w-full max-w-xl flex-col items-center gap-4 p-8 pb-16">
+      <h1 className="font-hand text-6xl text-black pb-2">
         purrint
       </h1>
 
       {!isBluetoothAvailable && (
-        <div className="w-full max-w-[404px] rounded-lg bg-amber-50 p-4 text-center text-sm font-medium text-amber-900/80 mb-4">
+        <div className="w-full max-w-[404px] rounded-lg bg-amber-50 p-4 text-center text-sm font-medium text-amber-900/80 mb-2">
           Use Chrome on Android or Desktop to print.
         </div>
       )}
 
-      <div className="flex gap-8 mb-4">
+      <div className="flex gap-4 mb-2">
         <button
           type="button"
           className={`${modeToggleButtonBase} ${
@@ -144,7 +144,7 @@ export default function PurrintApp() {
           title="Image Mode"
         >
           <Image
-            size={42}
+            size={32}
             strokeWidth={2.5}
           />
         </button>
@@ -157,7 +157,7 @@ export default function PurrintApp() {
           title="Text Mode"
         >
           <AlignLeft
-            size={42}
+            size={32}
             strokeWidth={2.5}
           />
         </button>
@@ -167,7 +167,7 @@ export default function PurrintApp() {
         id="preview-container"
         style={{ fontFamily: FONT_FAMILY }}
         className={[
-          "box-content w-[384px] min-h-[384px] bg-white border-[4px] border-black rounded-sm p-[10px]",
+          "box-content w-[384px] min-h-[384px] bg-white border-[4px] border-black rounded-sm p-[10px] z-0",
           mode === "image"
             ? "cursor-pointer flex flex-col items-center justify-center"
             : "cursor-text flex flex-col items-stretch justify-start",
@@ -224,7 +224,7 @@ export default function PurrintApp() {
       <button
         id="print-button"
         type="button"
-        className="font-hand text-4xl text-white bg-black px-6 py-1 -rotate-2 hover:rotate-0 transition-transform disabled:bg-neutral-600 disabled:cursor-not-allowed shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)]"
+        className="font-hand text-4xl text-white bg-black px-6 py-1 -mt-8 z-10 -rotate-2 hover:rotate-0 transition-transform disabled:bg-neutral-600 disabled:cursor-not-allowed shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)]"
         onClick={onPrintClick}
         disabled={!isBluetoothAvailable}
       >
