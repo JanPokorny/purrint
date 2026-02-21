@@ -210,7 +210,7 @@ export default function PurrintApp() {
           ref={previewCanvas}
           className={[
             "h-auto w-full pointer-events-none pixelated block",
-            photoImageData ? "block" : "hidden",
+            mode === "image" && photoImageData ? "block" : "hidden",
           ]
             .filter(Boolean)
             .join(" ")}
