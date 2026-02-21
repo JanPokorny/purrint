@@ -167,7 +167,7 @@ export default function PurrintApp() {
         id="preview-container"
         style={{ fontFamily: FONT_FAMILY }}
         className={[
-          "box-content w-[384px] min-h-[384px] bg-white border-[4px] border-black rounded-sm p-[10px] z-0",
+          "box-content w-[384px] min-h-[384px] bg-white shadow-lg rounded-sm p-[10px] z-0",
           mode === "image"
             ? "cursor-pointer flex flex-col items-center justify-center"
             : "cursor-text flex flex-col items-stretch justify-start",
