@@ -2,7 +2,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { drawText, splitText } from "canvas-txt";
 import { renderImage } from "../services/render.ts";
 import { printImage } from "../services/printer.ts";
-import icon from "../assets/icon.svg";
 
 const WIDTH = 384;
 const FONT_FAMILY = `"IBM VGA 9x16", "Courier New", Courier, monospace`;
@@ -118,55 +117,52 @@ export default function PurrintApp() {
 
 
   const modeToggleButtonBase =
-    "font-ibm border-[3px] border-black p-3 text-base leading-none";
+    "flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500";
+  const modeToggleButtonActive = "bg-white text-zinc-900 shadow-sm";
+  const modeToggleButtonInactive = "text-zinc-500 hover:text-zinc-900";
 
   return (
-    <>
-      <img
-        src={icon}
-        className="h-[156px] w-[156px] drop-shadow-purr"
-        alt="PURRINT"
-      />
+    <div className="flex w-full max-w-xl flex-col gap-8 rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm">
+      <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900">
+        PURRINT
+      </h1>
 
       {!isBluetoothAvailable && (
-        <div className="mx-auto my-10 box-border max-w-[384px] border-[3px] border-dashed border-black bg-[#fcc] p-5 text-center">
+        <div className="rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-800">
           PURRINT works only on Android and desktop Chrome-based browsers.
         </div>
       )}
 
-      <div className="flex justify-center gap-3">
+      <div className="flex rounded-lg bg-zinc-100 p-1">
         <button
           type="button"
-          className={[
-            modeToggleButtonBase,
-            mode === "image" ? "bg-black text-white" : "bg-white text-black",
-          ]
-            .filter(Boolean)
-            .join(" ")}
+          className={`${modeToggleButtonBase} ${
+            mode === "image" ? modeToggleButtonActive : modeToggleButtonInactive
+          }`}
           onClick={() => setMode("image")}
         >
           Image
         </button>
         <button
           type="button"
-          className={[
-            modeToggleButtonBase,
-            mode === "text" ? "bg-black text-white" : "bg-white text-black",
-          ]
-            .filter(Boolean)
-            .join(" ")}
+          className={`${modeToggleButtonBase} ${
+            mode === "text" ? modeToggleButtonActive : modeToggleButtonInactive
+          }`}
           onClick={() => setMode("text")}
         >
           Text
         </button>
       </div>
 
-      <div className="box-border border-[3px] border-black bg-white p-[5px] drop-shadow-purr">
+      <div className="flex justify-center overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 p-4">
         <div
           id="preview-container"
+          style={{ fontFamily: FONT_FAMILY }}
           className={[
-            "flex w-[384px] min-h-[180px] bg-white box-content",
-            mode === "image" ? "cursor-pointer items-center justify-center" : "cursor-text items-stretch justify-start",
+            "flex w-[384px] min-h-[180px] bg-white shadow-sm ring-1 ring-black/5",
+            mode === "image"
+              ? "cursor-pointer items-center justify-center"
+              : "cursor-text items-stretch justify-start",
           ].join(" ")}
           onClick={
             mode === "image" ? () => imageInput.current?.click() : undefined
@@ -183,21 +179,26 @@ export default function PurrintApp() {
           {mode === "image" && !photoImageData && (
             <div
               id="preview-text"
-              className="w-full pointer-events-none text-center text-black"
+              className="pointer-events-none w-full p-4 text-center text-zinc-400"
             >
-              <u>Select image</u>
+              <span className="font-sans text-sm font-medium">
+                Click to select image
+              </span>
               <br />
-              (or paste or drop here)
+              <span className="font-sans text-xs text-zinc-300">
+                (or paste / drop here)
+              </span>
             </div>
           )}
 
           {mode === "text" && (
             <textarea
               ref={textArea}
-              className="pl-[1px] min-h-[180px] w-full resize-none outline-none"
+              className="min-h-[180px] w-full resize-none bg-transparent p-0 outline-none placeholder:text-zinc-300"
               placeholder="Type your message here…"
               value={textInput}
               onChange={(event) => setTextInput(event.target.value)}
+              style={{ fontFamily: FONT_FAMILY, fontSize: FONT_SIZE }}
             />
           )}
 
@@ -205,7 +206,7 @@ export default function PurrintApp() {
             id="preview"
             ref={previewCanvas}
             className={[
-              "h-auto w-full pointer-events-none",
+              "h-auto w-full pointer-events-none pixelated",
               photoImageData ? "block" : "hidden",
             ]
               .filter(Boolean)
@@ -225,13 +226,13 @@ export default function PurrintApp() {
       <button
         id="print-button"
         type="button"
-        className="font-ibm bg-black text-white py-3 pl-5 pr-3 text-base tracking-widest drop-shadow-purr disabled:bg-neutral-700 disabled:text-neutral-300 disabled:cursor-not-allowed disabled:drop-shadow-none disabled:translate-x-0 disabled:translate-y-0 hover:drop-shadow-[2px_2px_rgba(0,0,0,0.4)] hover:translate-x-1 hover:translate-y-1"
+        className="w-full rounded-xl bg-zinc-900 px-6 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-zinc-800 hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400 disabled:shadow-none"
         onClick={onPrintClick}
         disabled={!isBluetoothAvailable}
       >
         PURRINT!
       </button>
-    </>
+    </div>
   );
 }
 
