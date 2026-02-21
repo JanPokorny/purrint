@@ -224,7 +224,7 @@ export default function PurrintApp() {
       <button
         id="print-button"
         type="button"
-        className="font-hand text-5xl text-white bg-black px-8 py-2 -mt-6 z-10 -rotate-2 hover:rotate-0 transition-transform disabled:bg-neutral-600 disabled:cursor-not-allowed shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)]"
+        className="font-hand text-5xl text-white bg-black px-8 py-2 -mt-6 z-10 -rotate-2 hover:rotate-0 transition-transform disabled:bg-black disabled:opacity-50 disabled:cursor-not-allowed shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)]"
         onClick={onPrintClick}
         disabled={!isBluetoothAvailable}
       >
