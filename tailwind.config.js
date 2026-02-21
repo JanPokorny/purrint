@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Space Grotesk", "sans-serif"],
+        hand: ["Patrick Hand", "cursive"],
         ibm: ['"IBM VGA 9x16"', '"Courier New"', "Courier", "monospace"],
       },
     },
