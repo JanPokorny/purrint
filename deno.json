@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "build": "deno run -A npm:typescript/tsc && deno run -A npm:vite build",
+    "dev": "deno run -A npm:vite",
+    "preview": "deno run -A npm:vite preview"
+  }
+}
