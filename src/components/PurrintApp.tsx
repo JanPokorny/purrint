@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { drawText, splitText } from "canvas-txt";
+import { Image, AlignLeft } from "lucide-react";
 import { renderImage } from "../services/render.ts";
 import { printImage } from "../services/printer.ts";
-import icon from "../assets/icon.svg";
 
 const WIDTH = 384;
 const FONT_FAMILY = `"IBM VGA 9x16", "Courier New", Courier, monospace`;
@@ -118,101 +118,114 @@ export default function PurrintApp() {
 
 
   const modeToggleButtonBase =
-    "font-ibm border-[3px] border-black p-3 text-base leading-none";
+    "p-3 transition-colors focus-visible:outline-none rounded-xl border-2";
+  const modeToggleButtonActive = "border-black bg-black text-white";
+  const modeToggleButtonInactive = "border-transparent text-black hover:bg-zinc-100";
 
   return (
-    <>
-      <img
-        src={icon}
-        className="h-[156px] w-[156px] drop-shadow-purr"
-        alt="PURRINT"
-      />
-
+    <div className="flex w-full max-w-xl flex-col items-center gap-4 p-4 pt-2 pb-16">
       {!isBluetoothAvailable && (
-        <div className="mx-auto my-10 box-border max-w-[384px] border-[3px] border-dashed border-black bg-[#fcc] p-5 text-center">
-          PURRINT works only on Android and desktop Chrome-based browsers.
+        <div className="w-full max-w-[404px] rounded-lg bg-amber-50 p-4 text-center text-sm font-medium text-amber-900/80 mb-2">
+          Use Chrome on Android or Desktop to print.
         </div>
       )}
 
-      <div className="flex justify-center gap-3">
+      <div className="flex gap-4 mb-2">
         <button
           type="button"
-          className={[
-            modeToggleButtonBase,
-            mode === "image" ? "bg-black text-white" : "bg-white text-black",
-          ]
-            .filter(Boolean)
-            .join(" ")}
+          className={`${modeToggleButtonBase} ${
+            mode === "image" ? modeToggleButtonActive : modeToggleButtonInactive
+          }`}
           onClick={() => setMode("image")}
+          title="Image Mode"
         >
-          Image
+          <Image
+            size={32}
+            strokeWidth={2.5}
+          />
         </button>
         <button
           type="button"
-          className={[
-            modeToggleButtonBase,
-            mode === "text" ? "bg-black text-white" : "bg-white text-black",
-          ]
-            .filter(Boolean)
-            .join(" ")}
+          className={`${modeToggleButtonBase} ${
+            mode === "text" ? modeToggleButtonActive : modeToggleButtonInactive
+          }`}
           onClick={() => setMode("text")}
+          title="Text Mode"
         >
-          Text
+          <AlignLeft
+            size={32}
+            strokeWidth={2.5}
+          />
         </button>
       </div>
 
-      <div className="box-border border-[3px] border-black bg-white p-[5px] drop-shadow-purr">
-        <div
-          id="preview-container"
+      <div
+        id="preview-container"
+        style={{ fontFamily: FONT_FAMILY }}
+        className={[
+          "box-content w-[384px] min-h-[384px] bg-white shadow-[0_10px_20px_rgba(0,0,0,0.19),0_6px_6px_rgba(0,0,0,0.23)] rounded-sm p-[10px] z-0",
+          mode === "image"
+            ? "cursor-pointer flex flex-col items-center justify-center"
+            : "cursor-text flex flex-col items-stretch justify-start",
+        ].join(" ")}
+        onClick={
+          mode === "image" ? () => imageInput.current?.click() : undefined
+        }
+        onDrop={mode === "image" ? onDrop : undefined}
+        onDragOver={
+          mode === "image"
+            ? (event) => {
+                event.preventDefault();
+              }
+            : undefined
+        }
+      >
+        {mode === "image" && !photoImageData && (
+          <div
+            id="preview-text"
+            className="pointer-events-none flex h-[384px] w-full flex-col items-center justify-center text-center text-zinc-400"
+          >
+            <span className="font-sans text-sm font-medium text-zinc-900">
+              Select image
+            </span>
+            <span className="mt-1 font-sans text-xs text-zinc-400">
+              or paste / drop here
+            </span>
+          </div>
+        )}
+
+        {mode === "text" && (
+          <textarea
+            ref={textArea}
+            className="min-h-[384px] w-full resize-none bg-transparent p-2 outline-none placeholder:text-zinc-300"
+            placeholder="Type your message here…"
+            value={textInput}
+            onChange={(event) => setTextInput(event.target.value)}
+            style={{ fontFamily: FONT_FAMILY, fontSize: FONT_SIZE }}
+          />
+        )}
+
+        <canvas
+          id="preview"
+          ref={previewCanvas}
           className={[
-            "flex w-[384px] min-h-[180px] bg-white box-content",
-            mode === "image" ? "cursor-pointer items-center justify-center" : "cursor-text items-stretch justify-start",
-          ].join(" ")}
-          onClick={
-            mode === "image" ? () => imageInput.current?.click() : undefined
-          }
-          onDrop={mode === "image" ? onDrop : undefined}
-          onDragOver={
-            mode === "image"
-              ? (event) => {
-                  event.preventDefault();
-                }
-              : undefined
-          }
-        >
-          {mode === "image" && !photoImageData && (
-            <div
-              id="preview-text"
-              className="w-full pointer-events-none text-center text-black"
-            >
-              <u>Select image</u>
-              <br />
-              (or paste or drop here)
-            </div>
-          )}
-
-          {mode === "text" && (
-            <textarea
-              ref={textArea}
-              className="pl-[1px] min-h-[180px] w-full resize-none outline-none"
-              placeholder="Type your message here…"
-              value={textInput}
-              onChange={(event) => setTextInput(event.target.value)}
-            />
-          )}
-
-          <canvas
-            id="preview"
-            ref={previewCanvas}
-            className={[
-              "h-auto w-full pointer-events-none",
-              photoImageData ? "block" : "hidden",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          ></canvas>
-        </div>
+            "h-auto w-full pointer-events-none pixelated",
+            mode === "image" && photoImageData ? "block" : "hidden",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        ></canvas>
       </div>
+
+      <button
+        id="print-button"
+        type="button"
+        className="font-hand text-5xl text-white bg-black px-8 py-2 -mt-6 z-10 -rotate-2 hover:rotate-0 transition-transform disabled:bg-black disabled:line-through disabled:cursor-not-allowed shadow-[0_10px_20px_rgba(0,0,0,0.19),0_6px_6px_rgba(0,0,0,0.23)]"
+        onClick={onPrintClick}
+        disabled={!isBluetoothAvailable}
+      >
+        purrint!
+      </button>
 
       <input
         type="file"
@@ -222,16 +235,7 @@ export default function PurrintApp() {
         ref={imageInput}
         onChange={onImageInputChange}
       />
-      <button
-        id="print-button"
-        type="button"
-        className="font-ibm bg-black text-white py-3 pl-5 pr-3 text-base tracking-widest drop-shadow-purr disabled:bg-neutral-700 disabled:text-neutral-300 disabled:cursor-not-allowed disabled:drop-shadow-none disabled:translate-x-0 disabled:translate-y-0 hover:drop-shadow-[2px_2px_rgba(0,0,0,0.4)] hover:translate-x-1 hover:translate-y-1"
-        onClick={onPrintClick}
-        disabled={!isBluetoothAvailable}
-      >
-        PURRINT!
-      </button>
-    </>
+    </div>
   );
 }
 

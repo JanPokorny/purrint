@@ -4,10 +4,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        sans: ["Space Grotesk", "sans-serif"],
+        hand: ["Patrick Hand", "cursive"],
         ibm: ['"IBM VGA 9x16"', '"Courier New"', "Courier", "monospace"],
-      },
-      dropShadow: {
-        purr: "6px 6px rgba(0, 0, 0, 0.4)",
       },
     },
   },
